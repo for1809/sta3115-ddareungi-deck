@@ -237,17 +237,17 @@ section:not(.accent) > table.tbl, .body > div > table.tbl { box-shadow: 0 0 0 1p
 
 <section style="counter-reset: page 6" id="weather" data-transition="fade">
 <p class="eyebrow">FACTOR 2. WEATHER</p>
-<h2>Rainy days are too irregular to model, so we set them aside</h2>
+<h2>Warmer days bring more rides, up to about 25 °C</h2>
 <div class="body">
 <div class="figcard"><div id="ix-wx" style="position:relative;width:1071px;height:580px"></div></div>
 <div class="side">
-<div class="stat"><p class="stat-num blue">Dry days</p><p class="stat-lab">follow a smooth curve: rides rise with temperature and dip in the hottest weeks (LOESS, span 0.75)</p><p class="stat-lab" style="font-size:20px;margin-top:10px">Each dot is one weekday: 480 in all, every Monday to Friday in 2024 and 2025 except public holidays (490), minus 10 days with mismatched records.</p></div>
-<div class="stat"><p class="stat-num">Rainy days</p><p class="stat-lab">(1 mm or more) scatter far from any curve</p></div>
-<div class="stat"><p class="stat-num">3×</p><p class="stat-lab">larger residual spread on rainy days (SD 37k vs 13k rides), and it grows with temperature</p></div>
+<div class="stat"><p class="stat-num blue">150k</p><p class="stat-lab">rides a weekday at 15–25 °C, the best band</p></div>
+<div class="stat"><p class="stat-num">3×</p><p class="stat-lab">the 50k of days below −5 °C</p></div>
+<div class="stat"><p class="stat-num ink">131k</p><p class="stat-lab">above 30 °C: rides dip again in the hottest days</p><p class="stat-lab" style="font-size:20px;margin-top:10px">Each dot is one weekday: 480 in all, every Monday to Friday in 2024 and 2025 except public holidays (490), minus 10 days with mismatched records.</p></div>
 </div>
 </div>
 <div class="foot"><p class="foot-l">STA3115 Exploratory Data Analysis, Group 1</p><p class="foot-r"></p></div>
-<aside>Next, weather. Each dot is one weekday, with temperature across and total rides up. On dry days the points follow a smooth LOESS curve: rides rise with temperature and dip a little in the hottest weeks. On days with 1 millimetre of rain or more, rides fall and the points scatter. The residuals make this clear: on dry days they are small and even, with a standard deviation of about 13,000 rides. On rainy days the spread is three times larger and grows with temperature. So the effect of rain depends on things our data does not capture, such as when and how hard it rains. That is why we set rainy days aside and keep dry weekdays.</aside>
+<aside>Next, weather, and for now only temperature. Each dot is one weekday, with the daily mean temperature across and total rides up. The line in each 5-degree band is the mean. Below minus 5 degrees there are about 50,000 rides a day. Between 15 and 25 degrees there are about 150,000, three times as many. Above 30 degrees rides dip again, to about 131,000. Later we put the factors together to see how they interact.</aside>
 </section>
 
 <section style="counter-reset: page 7" id="scope" data-transition="fade">
@@ -644,46 +644,41 @@ section:not(.accent) > table.tbl, .body > div > table.tbl { box-shadow: 0 0 0 1p
     stop(box);
   })();
 
-  // ---------- weather: temperature vs rides, dry and wet weekdays, then residual spread ----------
+  // ---------- weather: rides by daily mean temperature, all weekdays ----------
   (function () {
     const box = document.getElementById('ix-wx'); if (!box) return;
-    const X = D.weather, W = 1071, H = 580, L = 96, R = 24, T = 60, B = 80;
+    const P = D.weather.pts, W = 1071, H = 580, L = 96, R = 24, T = 60, B = 80;
     const svg = makeSvg(box, W, H);
     const x = t => L + (t + 12) / 44 * (W - L - R);
-    const yA = v => H - B - v / 20 * (H - T - B), yR = v => T + (H - T - B) / 2 - v / 12 * ((H - T - B) / 2);
-    const axA = el('g', {}, svg), axR = el('g', {}, svg);
-    axisY(axA, L, R, W, yA, [0, 5, 10, 15, 20], v => (v * 10) + 'k');
-    axisY(axR, L, R, W, yR, [-10, -5, 0, 5, 10], v => (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v * 10) + 'k');
+    const y = v => H - B - v / 20 * (H - T - B);
+    axisY(svg, L, R, W, y, [0, 5, 10, 15, 20], v => (v * 10) + 'k');
     [-10, 0, 10, 20, 30].forEach(t => txt(t + '°C', { x: x(t), y: H - B + 28, 'text-anchor': 'middle', 'font-size': 17, fill: C.muted }, svg));
     txt('Daily mean temperature', { x: (L + W - R) / 2, y: H - B + 60, 'text-anchor': 'middle', 'font-size': 19, fill: C.ink }, svg);
-    const yla = el('g', {}, svg); ylab(yla, 'Rides on the day (weekdays)', T, H, B);
-    const ylr = el('g', {}, svg); ylab(ylr, 'Residual from the LOESS curve', T, H, B);
+    ylab(svg, 'Rides on the day (weekdays)', T, H, B);
     const pg = el('g', {}, svg);
-    const dots = X.pts.map(p => { const c = el('circle', { r: 4.2, fill: p.w ? C.red : C.blue, 'fill-opacity': .5 }, pg);
-      c.style.transition = 'cy 900ms ease-in-out, opacity 450ms'; c.setAttribute('cx', x(p.t)); return c; });
-    function curve(cv, col, yy) { return el('path', { d: 'M' + cv.x.map((t, j) => x(t).toFixed(1) + ',' + yy(cv.y[j]).toFixed(1)).join('L'), fill: 'none', stroke: col, 'stroke-width': 4.5, 'stroke-linecap': 'round' }, svg); }
-    const cd = curve(X.dry, C.navy, yA), cw = curve(X.wet, '#c81e2c', yA);
-    const lg = el('g', {}, svg);
-    el('circle', { cx: L + 10, cy: 22, r: 7, fill: C.blue }, lg); txt(`No rain (${X.n_dry} days)`, { x: L + 24, y: 28, 'font-size': 19, fill: C.ink }, lg);
-    const lgw = el('g', {}, svg);
-    el('circle', { cx: L + 270, cy: 22, r: 7, fill: C.red }, lgw); txt(`Rain of 1 mm or more (${X.n_wet} days)`, { x: L + 284, y: 28, 'font-size': 19, fill: C.ink }, lgw);
-    const sdr = X.sd.find(s => !s.wet).sd, sdw = X.sd.find(s => s.wet).sd;
-    const sdg = el('g', {}, svg);
-    [[sdr, C.blue, 'No rain: SD ' + (sdr * 10).toFixed(1) + 'k'], [sdw, C.red, 'Rain: SD ' + (sdw * 10).toFixed(1) + 'k']].forEach(([s, col, lab], j) => {
-      el('rect', { x: L, width: W - L - R, y: yR(s * (j ? 1 : 1)), height: yR(-s) - yR(s), fill: col, 'fill-opacity': .07 }, sdg);
-      halo(txt(lab, { x: W - R - 8, y: yR(s) - 8, 'text-anchor': 'end', 'font-size': 19, 'font-weight': 700, fill: col }, sdg));
+    P.forEach(p => el('circle', { cx: x(p.t), cy: y(p.n), r: 4.2, fill: C.blue, 'fill-opacity': .35 }, pg));
+    // mean rides in 5 °C bands; the coldest and hottest bands are open-ended
+    const edges = [-Infinity, -5, 0, 5, 10, 15, 20, 25, 30, Infinity], lab = ['< −5', '−5–0', '0–5', '5–10', '10–15', '15–20', '20–25', '25–30', '30+'];
+    const bands = lab.map((s, j) => { const v = P.filter(p => p.t >= edges[j] && p.t < edges[j + 1]);
+      return { s, n: v.length, m: v.reduce((a, p) => a + p.n, 0) / v.length, t: v.reduce((a, p) => a + p.t, 0) / v.length }; });
+    const bg = el('g', {}, svg);
+    bands.forEach((b, j) => {
+      const x0 = x(Math.max(edges[j], -12)), x1 = x(Math.min(edges[j + 1], 32));
+      el('line', { x1: x0 + 6, x2: x1 - 6, y1: y(b.m), y2: y(b.m), stroke: C.navy, 'stroke-width': 6, 'stroke-linecap': 'round' }, bg);
+      halo(txt((b.m * 10).toFixed(0) + 'k', { x: (x0 + x1) / 2, y: y(b.m) - 14, 'text-anchor': 'middle', 'font-size': 18, 'font-weight': 700, fill: C.navy }, bg));
+      txt(b.n + ' days', { x: (x0 + x1) / 2, y: H - B - 10, 'text-anchor': 'middle', 'font-size': 13, fill: C.muted }, bg);
     });
+    const lg = el('g', {}, svg);
+    el('circle', { cx: L + 10, cy: 22, r: 7, fill: C.blue, 'fill-opacity': .5 }, lg); txt('One weekday (480)', { x: L + 24, y: 28, 'font-size': 19, fill: C.ink }, lg);
+    const lgb = el('g', {}, svg);
+    el('line', { x1: L + 240, x2: L + 272, y1: 22, y2: 22, stroke: C.navy, 'stroke-width': 6, 'stroke-linecap': 'round' }, lgb);
+    txt('Mean rides in each 5 °C band', { x: L + 284, y: 28, 'font-size': 19, fill: C.ink }, lgb);
     const side = sideItems('weather');
     IX.weather = {
-      steps: 3,
-      cues: ['Dry weekdays: rides rise with temperature and dip in the hottest weeks. The points stay close to the LOESS curve.',
-             'Rainy weekdays: far fewer rides, and the points scatter widely.',
-             'Residuals: rainy days vary three times as much, and more so when it is warm. Temperature alone cannot explain them.'],
-      set(k) {
-        X.pts.forEach((p, j) => { const d = dots[j]; d.style.opacity = (p.w && k === 0) ? 0 : 1; d.setAttribute('cy', k < 2 ? yA(p.n) : yR(p.r)); });
-        fade(cd, k < 2); fade(cw, k === 1); fade(lgw, k >= 1); fade(axA, k < 2, 600); fade(yla, k < 2, 600); fade(axR, k === 2, 600); fade(ylr, k === 2, 600); fade(sdg, k === 2, 600);
-        reveal(side, k + 1);
-      },
+      steps: 2,
+      cues: ['Each dot is one weekday: temperature across, rides up. Warmer days have more rides.',
+             'The mean in each 5 °C band: about 50k rides below −5 °C, three times that at 15–25 °C, and a dip again above 30 °C.'],
+      set(k) { fade(bg, k >= 1, 600); fade(lgb, k >= 1); reveal(side, k === 0 ? 0 : side.length); },
     };
     stop(box);
   })();
