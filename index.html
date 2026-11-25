@@ -207,50 +207,7 @@ section:not(.accent) > table.tbl, .body > div > table.tbl { box-shadow: 0 0 0 1p
 <aside>Where does the money go? According to Bike Magazine, 53% of the operating cost is staff time spent redistributing bikes: the trucks you see on the street. Every weekday morning, many stations lose bikes. But only some of them actually run out. So our question is: why do only some stations run out? If we know that, the trucks can go to the right place at the right time.</aside>
 </section>
 
-<section style="counter-reset: page 4" id="factors" class="dark" data-transition="fade">
-<p class="eyebrow">WHAT MIGHT MATTER</p>
-<h2>Possible Factors</h2>
-<div class="qlist">
-<div class="q"><p class="q-num">1</p><p class="q-text">Time of day</p></div>
-<div class="q"><p class="q-num">2</p><p class="q-text">Weather</p></div>
-<div class="q"><p class="q-num">3</p><p class="q-text">Elevation</p></div>
-<div class="q"><p class="q-num">4</p><p class="q-text">Distance to the nearest subway station</p></div>
-</div>
-<div class="foot"><p class="foot-l">STA3115 Exploratory Data Analysis, Group 1</p><p class="foot-r"></p></div>
-<aside>Before looking at the data, we listed what might decide where a bike ends up. Time of day, because commuting and leisure trips look different. Weather: rain and temperature. Terrain, because pedalling uphill is hard. And transit, since many people ride to and from the subway. The first two tell us which days to study; the last two are possible explanations.</aside>
-</section>
-
-<section style="counter-reset: page 5" id="hours" data-transition="fade">
-<p class="eyebrow">FACTOR 1. TIME OF DAY</p>
-<h2>Weekdays follow a clear commute pattern; weekends do not</h2>
-<div class="body">
-<div class="figcard"><div id="ix-hour" style="position:relative;width:1071px;height:580px"></div></div>
-<div class="side">
-<div class="stat"><p class="stat-num blue">8 am, 6 pm</p><p class="stat-lab">two sharp weekday peaks, with 11,300 and 13,200 rides in the hour</p></div>
-<div class="stat"><p class="stat-num">One broad peak</p><p class="stat-lab">on weekends and holidays, highest at 5 pm with 6,900 rides</p></div>
-<div class="stat"><p class="stat-num ink">Weekdays only</p><p class="stat-lab">from here on, with the 7–9 am commute as the key window</p></div>
-</div>
-</div>
-<div class="foot"><p class="foot-l">STA3115 Exploratory Data Analysis, Group 1</p><p class="foot-r"></p></div>
-<aside>First, time of day. This chart shows the average number of rides started in each hour. On weekdays there are two sharp peaks, at 8 in the morning and 6 in the evening: that is commuting. On weekends and holidays there is a single broad peak in the afternoon. Because the weekday pattern repeats day after day, we focus on weekdays, and especially on the morning commute, from 7 to 9 am.</aside>
-</section>
-
-<section style="counter-reset: page 6" id="weather" data-transition="fade">
-<p class="eyebrow">FACTOR 2. WEATHER</p>
-<h2>Rides climb with the day’s high up to about 20 °C, then stay flat</h2>
-<div class="body">
-<div class="figcard"><div id="ix-wx" style="position:relative;width:1071px;height:580px"></div></div>
-<div class="side">
-<div class="stat"><p class="stat-num">13 → 41</p><p class="stat-lab">median rentals a weekday per station, from highs below 0&nbsp;°C to highs of 20–25&nbsp;°C</p></div>
-<div class="stat"><p class="stat-num blue">Flat</p><p class="stat-lab">from 20&nbsp;°C to 35&nbsp;°C (about 40); only above 35&nbsp;°C a small dip, to 36</p></div>
-<div class="stat"><p class="stat-lab" style="font-size:20px">Each dot is one station in one band: its mean rentals on the weekdays of 2024 and 2025 whose maximum, at the nearest of 27 KMA weather stations, fell in that band (bands with 5 or more such days; 25,225 dots from 2,878 stations). Dots are spread sideways within the band so they do not overlap.</p></div>
-</div>
-</div>
-<div class="foot"><p class="foot-l">STA3115 Exploratory Data Analysis, Group 1</p><p class="foot-r"></p></div>
-<aside>Next, weather, and for now only temperature. We use the day's maximum temperature where each station is, from the nearest of 27 KMA weather stations in Seoul, because a daily mean is pulled down by the night. Each dot is one station in one 5-degree band of that maximum: its mean rentals on the weekdays of 2024 and 2025 that fell in the band. The bars are the medians. On days with a high below zero the typical station sees 13 rentals. That rises to 41 at highs of 20 to 25 degrees, and then it stays flat up to 35 degrees; only above 35 there is a small dip. So it is cold that keeps people off the bikes, more than summer heat. Later we put the factors together to see how they interact.</aside>
-</section>
-
-<section style="counter-reset: page 7" id="scope" data-transition="fade">
+<section style="counter-reset: page 4" id="scope" data-transition="fade">
 <p class="eyebrow">DATA</p>
 <h2>378 dry weekdays, 2,843 stations, every trip</h2>
 <div class="cols">
@@ -266,12 +223,13 @@ section:not(.accent) > table.tbl, .body > div > table.tbl { box-shadow: 0 0 0 1p
 </div>
 </div>
 <div class="foot"><p class="foot-l">STA3115 Exploratory Data Analysis, Group 1</p><p class="foot-r"></p></div>
-<aside>Factors one and two tell us which days to study. Weekends and holidays follow a different pattern from the commute, and rain changes how many
-people ride, so we keep dry weekdays. That leaves 378 dry weekdays in 2024 and 2025, and 2,843 stations, with every trip between them. For the
-stock at each station we also use the hourly records of 2025. Next: what we measure on those days.</aside>
+<aside>To answer it, we use every trip between Seoul's bike stations in 2024 and 2025. We keep weekdays that are not public holidays and
+have under 1 mm of rain: 378 days. Factors one and two will show why: weekends follow a different pattern from the commute, and rain changes how
+many people ride. That leaves 2,843 stations with records on at least 50 of those days. For the stock at each station we also use the hourly
+records of 2025. Next: what we measure on those days.</aside>
 </section>
 
-<section style="counter-reset: page 8" id="d_measures" data-transition="fade">
+<section style="counter-reset: page 5" id="d_measures" data-transition="fade">
 <p class="eyebrow">WHAT WE MEASURE</p>
 <h2>Losing bikes is not the same as running out</h2>
 <div class="body">
@@ -279,10 +237,10 @@ stock at each station we also use the hourly records of 2025. Next: what we meas
 <div class="side" style="gap:22px"><p class="note"><b>Net outflow</b>: rentals minus returns, in bikes. Above 0, the station loses bikes; below 0, it gains them.<br><b>Empty share</b>: how often the station has zero bikes at 7, 8 or 9 am.</p><div class="stat"><p class="stat-num blue">63%</p><p class="stat-lab">of stations lose bikes every morning: net outflow above 0 (1,697 of 2,713)</p></div><div class="stat"><p class="stat-num red">24%</p><p class="stat-lab">of those actually run out: empty in at least one in five readings from 7 to 9 am (402)</p></div><p class="note muted" style="font-size:20px">Net outflow: 7 to 9 am, dry weekdays 2024 to 2025 (team table). Empty share: hourly stock, dry weekdays 2025.</p></div>
 </div>
 <div class="foot"><p class="foot-l">STA3115 Exploratory Data Analysis, Group 1</p><p class="foot-r"></p></div>
-<aside>We use two measures. The first is net outflow: rentals minus returns, counted in bikes. When it is positive, the station loses bikes; when it is negative, it gains them. We compute it for the whole day and for the morning commute; a daily net outflow of plus 4 means the station ends every day four bikes short. Net outflow tells us where bikes leave. But our question is where they run out, so the second measure is the empty share: how often the station has no bike at all at 7, 8 or 9 am. Each dot is one station. Everything right of the line loses bikes in the morning: 63% of all stations. But only the red ones, above the dashed line, are empty in at least one in five readings, and that is just 24% of the stations that lose bikes. Most blue stations lose bikes every morning and still never run out. So from here on we look at both measures, and ask what makes the red stations different.</aside>
+<aside>We use two measures. The first is net outflow: rentals minus returns, counted in bikes. When it is positive, the station loses bikes; when it is negative, it gains them. We compute it for the whole day and for the morning commute; a daily net outflow of plus 4 means the station ends every day four bikes short. Net outflow tells us where bikes leave. But our question is where they run out, so the second measure is the empty share: how often the station has no bike at all at 7, 8 or 9 am. Each dot is one station. Everything right of the line loses bikes in the morning: 63% of all stations. But only the red ones, above the dashed line, are empty in at least one in five readings, and that is just 24% of the stations that lose bikes. Most blue stations lose bikes every morning and still never run out. We keep both measures from here on. First: where do the bikes leave each morning?</aside>
 </section>
 
-<section style="counter-reset: page 9" id="gumap" data-transition="fade">
+<section style="counter-reset: page 6" id="gumap" data-transition="fade">
 <p class="eyebrow">WHERE BIKES LEAVE</p>
 <h2>Each morning, some districts empty out while others fill up</h2>
 <div class="body">
@@ -297,6 +255,49 @@ stock at each station we also use the hourly records of 2025. Next: what we meas
 </div>
 <div class="foot"><p class="foot-l">STA3115 Exploratory Data Analysis, Group 1</p><p class="foot-r"></p></div>
 <aside>Now, where. First, plain use: rentals per station in each hour. Drag the slider and you can see every district peak at 8 am and 6 pm. Next, net flow during the morning commute. Red districts lose bikes and blue districts gain them. Gwangjin, Seodaemun and Dongdaemun lose bikes, while the office areas of Seongdong, the city centre and Yeouido gain them. Over the whole day the colours do not cancel out, and what is left over is exactly what the trucks have to move. But a district is a large unit. What is it about a station that makes it lose bikes?</aside>
+</section>
+
+<section style="counter-reset: page 7" id="factors" class="dark" data-transition="fade">
+<p class="eyebrow">WHAT MIGHT MATTER</p>
+<h2>Possible Factors</h2>
+<div class="qlist">
+<div class="q"><p class="q-num">1</p><p class="q-text">Time of day</p></div>
+<div class="q"><p class="q-num">2</p><p class="q-text">Weather</p></div>
+<div class="q"><p class="q-num">3</p><p class="q-text">Elevation</p></div>
+<div class="q"><p class="q-num">4</p><p class="q-text">Distance to the nearest subway station</p></div>
+</div>
+<div class="foot"><p class="foot-l">STA3115 Exploratory Data Analysis, Group 1</p><p class="foot-r"></p></div>
+<aside>What is it about a station? We listed four candidates. Time of day, because commuting and leisure trips look different. Weather: rain and temperature. Terrain, because pedalling uphill is hard. And transit, since many people ride to and from the subway. The first two explain the days we chose; the last two are possible reasons why some stations run out. We look at them one at a time, then together.</aside>
+</section>
+
+<section style="counter-reset: page 8" id="hours" data-transition="fade">
+<p class="eyebrow">FACTOR 1. TIME OF DAY</p>
+<h2>Weekdays follow a clear commute pattern; weekends do not</h2>
+<div class="body">
+<div class="figcard"><div id="ix-hour" style="position:relative;width:1071px;height:580px"></div></div>
+<div class="side">
+<div class="stat"><p class="stat-num blue">8 am, 6 pm</p><p class="stat-lab">two sharp weekday peaks, with 11,300 and 13,200 rides in the hour</p></div>
+<div class="stat"><p class="stat-num">One broad peak</p><p class="stat-lab">on weekends and holidays, highest at 5 pm with 6,900 rides</p></div>
+<div class="stat"><p class="stat-num ink">Weekdays only</p><p class="stat-lab">from here on, with the 7–9 am commute as the key window</p></div>
+</div>
+</div>
+<div class="foot"><p class="foot-l">STA3115 Exploratory Data Analysis, Group 1</p><p class="foot-r"></p></div>
+<aside>First, time of day. This chart shows the average number of rides started in each hour. On weekdays there are two sharp peaks, at 8 in the morning and 6 in the evening: that is commuting. On weekends and holidays there is a single broad peak in the afternoon. This is why we study weekdays, and especially the morning commute, from 7 to 9 am.</aside>
+</section>
+
+<section style="counter-reset: page 9" id="weather" data-transition="fade">
+<p class="eyebrow">FACTOR 2. WEATHER</p>
+<h2>Rides climb with the day’s high up to about 20 °C, then stay flat</h2>
+<div class="body">
+<div class="figcard"><div id="ix-wx" style="position:relative;width:1071px;height:580px"></div></div>
+<div class="side">
+<div class="stat"><p class="stat-num">13 → 41</p><p class="stat-lab">median rentals a weekday per station, from highs below 0&nbsp;°C to highs of 20–25&nbsp;°C</p></div>
+<div class="stat"><p class="stat-num blue">Flat</p><p class="stat-lab">from 20&nbsp;°C to 35&nbsp;°C (about 40); only above 35&nbsp;°C a small dip, to 36</p></div>
+<div class="stat"><p class="stat-lab" style="font-size:20px">Each dot is one station in one band: its mean rentals on the weekdays of 2024 and 2025 whose maximum, at the nearest of 27 KMA weather stations, fell in that band (bands with 5 or more such days; 25,225 dots from 2,878 stations). Dots are spread sideways within the band so they do not overlap.</p></div>
+</div>
+</div>
+<div class="foot"><p class="foot-l">STA3115 Exploratory Data Analysis, Group 1</p><p class="foot-r"></p></div>
+<aside>Next, weather. Rain cuts rides sharply, which is why we keep dry days; here we look at temperature. We use the day's maximum temperature where each station is, from the nearest of 27 KMA weather stations in Seoul, because a daily mean is pulled down by the night. Each dot is one station in one 5-degree band of that maximum: its mean rentals on the weekdays of 2024 and 2025 that fell in the band. The bars are the medians. On days with a high below zero the typical station sees 13 rentals. That rises to 41 at highs of 20 to 25 degrees, and then it stays flat up to 35 degrees; only above 35 there is a small dip. So it is cold that keeps people off the bikes, more than summer heat. Later we put the factors together to see how they interact.</aside>
 </section>
 
 <section style="counter-reset: page 10" id="elev" data-transition="fade">
