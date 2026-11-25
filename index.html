@@ -366,10 +366,10 @@ To explore that, we classified stations using morning and full-day net outflow.<
 <div class="body">
 <div class="figcard"><div id="ix-quad" style="position:relative;width:1071px;height:600px"></div></div>
 <div class="side">
-<div class="stat"><p class="stat-num ink">2 questions</p><p class="stat-lab">Morning net outflow > 0? Full-day net outflow > 0?</p></div>
-<div class="stat"><p class="stat-num ink">2,843</p><p class="stat-lab">stations, each sorted by its two answers</p></div>
-<div class="stat"><p class="stat-num">1,005 vs 766</p><p class="stat-lab">G1: morning loss remains over the full day. G2: later net returns offset it.</p></div>
-<div class="stat"><p class="stat-num ink">1,771</p><p class="stat-lab">stations have positive mean morning net outflow. Do later net returns offset it?</p></div>
+<div><p style="margin:0;font-size:19px;font-weight:700;letter-spacing:.08em;color:var(--blue)">TWO QUESTIONS</p><div style="display:flex;align-items:baseline;gap:16px;margin-top:10px"><span style="flex:0 0 118px;font-size:18px;font-weight:700;letter-spacing:.06em;color:var(--muted)">COLUMNS</span><span style="font-size:26px;font-weight:600;color:var(--ink)">Loses bikes 7–9 am?</span></div><div style="display:flex;align-items:baseline;gap:16px;margin-top:10px"><span style="flex:0 0 118px;font-size:18px;font-weight:700;letter-spacing:.06em;color:var(--muted)">ROWS</span><span style="font-size:26px;font-weight:600;color:var(--ink)">Loses bikes over the full day?</span></div></div>
+<div><p style="margin:0;font-size:19px;font-weight:700;letter-spacing:.08em;color:var(--blue)">FOUR GROUPS</p><p style="margin:10px 0 0;font-size:26px;font-weight:600;color:var(--ink)">2,843 stations by both answers</p></div>
+<div><p style="margin:0;font-size:19px;font-weight:700;letter-spacing:.08em;color:var(--blue)">THE LINES</p><p style="margin:10px 0 0;font-size:26px;font-weight:600;color:var(--ink);line-height:1.4">Hourly net outflow, not stock</p><p style="margin:4px 0 0;font-size:21px;color:var(--ink2)">Above 0: losing bikes. Below 0: gaining.</p></div>
+<div style="padding-top:6px;border-top:2px solid var(--line)"><p style="margin:18px 0 0;font-size:84px;line-height:1;font-weight:700;color:var(--ink)">1,771</p><p style="margin:8px 0 18px;font-size:24px;color:var(--ink2)">lose bikes in the morning</p><div style="display:flex;gap:6px;border-radius:12px;overflow:hidden"><div style="flex:1005;background:var(--red);height:56px;display:flex;align-items:center;padding:0 16px;color:#fff;font-size:24px;font-weight:700">G1<span style="font-weight:500;margin-left:12px">1,005</span></div><div style="flex:766;background:#ff9f1c;height:56px;display:flex;align-items:center;padding:0 16px;color:#fff;font-size:24px;font-weight:700">G2<span style="font-weight:500;margin-left:12px">766</span></div></div><div style="display:flex;gap:6px;margin-top:10px;font-size:20px;line-height:1.35;color:var(--ink2)"><div style="flex:1005;padding-right:10px">still a net loss by day end</div><div style="flex:766">later returns offset it</div></div></div>
 </div>
 </div>
 <div class="foot"><p class="foot-l">STA3115 Exploratory Data Analysis, Group 1</p><p class="foot-r"></p></div>
@@ -971,7 +971,7 @@ Third, hourly stock readings can miss shortages between snapshots. Our empty sha
           o.card.style.opacity = k >= 1 ? (dim ? .25 : 1) : 0;
           o.day.style.opacity = k >= 2 ? (dim ? .25 : 1) : 0;
         });
-        fade(bal, k >= 1 && k < 3); fade(call, k === 3); reveal(side, k + 1);
+        fade(bal, k >= 1 && k < 3); fade(call, false); reveal(side, k + 1);
       },
     };
     stop(box);
